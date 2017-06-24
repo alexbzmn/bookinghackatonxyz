@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+
+    <title>Create entry</title>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="http://w2ui.com/src/w2ui-1.5.rc1.min.css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://w2ui.com/src/w2ui-1.5.rc1.min.js"></script>
+    <script src="{% static 'nomad/test.js' %}"></script>
+    <script src="{% static 'nomad/csrf.js' %}"></script>
+</head>
+<body>
+
+<div id="myForm"></div>
+</body>
+<script>
+    $(function () {
+        $('#myForm').w2form({
+            name: 'myForm',
+            fields: [
+                {name: 'Text', type: 'text', required: true},
+                {name: 'Publication Date', type: 'date', required: true}
+            ],
+            actions: {
+                reset: function () {
+                    this.clear();
+                },
+                save: function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/nomad/create-question/create",
+                        headers: {"X-CSRFToken": getCookie('csrftoken')},
+                        data: JSON.stringify(this.record),
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (resultData) {
+                            alert("Save Complete")
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>
+</html>
