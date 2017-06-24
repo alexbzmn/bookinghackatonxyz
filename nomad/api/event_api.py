@@ -35,8 +35,23 @@ class EventfulDataImporter:
 
         return data_list[0]['events']['event']
 
+    def get_event_by_id(self, event_id):
+        eventful_api = eventful.API(self.api_key)
+        res = None
+
+        try:
+            request_resource = '/events/get'
+
+            res = eventful_api.call(request_resource, id=event_id)
+
+        except:
+            print 'Eventful request error for event: '.format(event_id)
+
+        return res
+
 
 # Example
 importer = EventfulDataImporter()
-events = importer.import_events(lat=32.746682, long=-117.162741, categories='music, food')
+events = importer.get_event_by_id(event_id="E0-001-095008330-1")
+
 print events

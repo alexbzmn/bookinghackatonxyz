@@ -26,9 +26,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.151', '192.168.1.115']
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'nomad.apps.NomadConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,6 +48,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
