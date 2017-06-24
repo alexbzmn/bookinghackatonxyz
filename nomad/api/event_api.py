@@ -1,5 +1,7 @@
 import eventful
 
+from nomad.models import Event
+
 
 class EventfulDataImporter:
     """
@@ -37,17 +39,17 @@ class EventfulDataImporter:
 
     def get_event_by_id(self, event_id):
         eventful_api = eventful.API(self.api_key)
-        res = None
+        event = None
 
         try:
             request_resource = '/events/get'
 
-            res = eventful_api.call(request_resource, id=event_id)
+            event = eventful_api.call(request_resource, id=event_id)
 
         except:
             print 'Eventful request error for event: '.format(event_id)
 
-        return res
+        return Event.from_json(event)
 
 
 # Example

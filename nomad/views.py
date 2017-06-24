@@ -73,31 +73,17 @@ def get_events(request, arg):
         categories = ",".join(categoryNames)
 
         importer = EventfulDataImporter()
-        if eventRequest.fromDate is not None and eventRequest.toDate is not None :
-            date_interval='{0}00-{1}00'.format(eventRequest.fromDate, eventRequest.toDate)
+        if eventRequest.fromDate is not None and eventRequest.toDate is not None:
+            date_interval = '{0}00-{1}00'.format(eventRequest.fromDate, eventRequest.toDate)
             events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
                                             categories=categories, date_interval=date_interval)
         else:
             events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
-                                        categories=categories)
+                                            categories=categories)
 
         events_array = []
         for event in events:
-            current_event = Event()
-            current_event.title = event['title']
-            current_event.description = event['description']
-
-            image = event['image']
-            if image is not None:
-                current_event.imageUrl = get_image(image)
-
-            current_event.latitude = event['latitude']
-            current_event.longitude = event['longitude']
-            current_event.startDateTime = event['start_time']
-            current_event.eventId = event['id']
-            current_event.service_id = 'eventful'
-            current_event.eventUrl = event['url']
-            current_event.tags = eventRequest.categories
+            current_event = Event.from_json(event, eventRequest)
             events_array.append(current_event)
 
         json_resp = json.dumps(events_array, default=lambda o: o.__dict__)
@@ -105,12 +91,7 @@ def get_events(request, arg):
     return HttpResponse("Get Event request is not supported")
 
 
-def get_image(image):
-    if 'medium' in image:
-        return image['medium']['url']
-    return ""
-
-def like(request, service_id, event_id) :
+def like(request, service_id, event_id):
     if (request.method == 'POST'):
         importer = EventfulDataImporter()
         return HttpResponse('serviceId {0} , id {1}'.format(service_id, event_id))

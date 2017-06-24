@@ -66,5 +66,33 @@ class Event(object):
         self.eventUrl = eventUrl
         self.service_id = service_id
 
+    @staticmethod
+    def from_json(event, event_request=None):
+        current_event = Event()
+        current_event.title = event['title']
+        current_event.description = event['description']
+
+        image = event['image']
+        if image is not None:
+            current_event.imageUrl = get_image(image)
+
+        current_event.latitude = event['latitude']
+        current_event.longitude = event['longitude']
+        current_event.startDateTime = event['start_time']
+        current_event.eventId = event['id']
+        current_event.service_id = 'eventful'
+        current_event.eventUrl = event['url']
+
+        if event_request is not None:
+            current_event.tags = event_request.categories
+
+        return current_event
+
+    @staticmethod
+    def get_image(image):
+        if 'medium' in image:
+            return image['medium']['url']
+        return ""
+
     def __str__(self):
         return self.eventId
