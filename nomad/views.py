@@ -1,12 +1,14 @@
-from django.http import HttpResponse, Http404
+import json
+import threading
+
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-import json
 
 from nomad.api.event_api import EventfulDataImporter
 from nomad.app_constants import EVENT_CATEGORIES
-from nomad.models import LikedEvent
-from .models import Question, Choice, EventRequest, Event, LikeRequest
+from nomad.models import LikedEvent, User, Journey, Category
+from .models import Question, EventRequest, Event, LikeRequest
 
 
 def index(request):
@@ -58,7 +60,7 @@ def detail(request, question_id):
 
 
 def get_events(request, arg):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         eventsRequestJSON = json.loads(request.body)
         eventRequest = EventRequest()
         eventRequest.latitude = str(eventsRequestJSON.get("latitude"))
@@ -88,9 +90,49 @@ def get_events(request, arg):
             current_event = Event.from_json(event, eventRequest)
             events_array.append(current_event)
 
+        save_request_info(eventRequest)
+        # thread = threading.Thread(target=save_request_info,
+        #                           args=(eventRequest, eventRequest.categories))
+        # thread.start()
+
         json_resp = json.dumps(events_array, default=lambda o: o.__dict__)
         return HttpResponse(json_resp)
     return HttpResponse("Get Event request is not supported")
+
+
+def save_request_info(event_request):
+    save_user(event_request.username)
+    save_journey(event_request)
+
+    for category_id in event_request.categories:
+        save_category(event_request, category_id)
+
+
+def save_journey(event_request):
+    journey = Journey()
+    journey.username = User.objects.get(pk=event_request.username)
+    journey.longitude = event_request.longitude
+    journey.latitude = event_request.latitude
+    journey.fromDate = event_request.fromDate
+    journey.toDate = event_request.toDate
+
+    journey.save()
+
+
+def save_category(event_request, category_id):
+    category = Category()
+    category.id = event_request.username + str(category_id)
+    category.category_id = category_id
+    category.username = User.objects.get(pk=event_request.username)
+
+    category.save()
+
+
+def save_user(username):
+    user = User()
+    user.username = username
+
+    user.save()
 
 
 def likeDeprecated(request, service_id, event_id):

@@ -39,7 +39,8 @@ class User(models.Model):
 
 @python_2_unicode_compatible
 class Category(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.CharField(primary_key=True, max_length=200)
+    category_id = models.IntegerField()
     username = models.ForeignKey(User)
 
     def __str__(self):
