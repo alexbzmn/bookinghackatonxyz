@@ -76,23 +76,26 @@ def get_events(request, arg):
         events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
                                         categories=categories)
 
-        eventsArray = []
+        events_array = []
         for event in events:
-            currentEvent = Event()
-            currentEvent.title = event['title']
-            currentEvent.description = event['description']
-            image = event['image']
-            if (image is not None) :
-                currentEvent.imageUrl = get_image(image)
-            currentEvent.latitude = event['latitude']
-            currentEvent.longitude = event['longitude']
-            currentEvent.startDateTime = event['start_time']
-            currentEvent.eventId = event['id']
-            currentEvent.eventUrl = event['url']
-            currentEvent.tags = eventRequest.categories
-            eventsArray.append(currentEvent)
+            current_event = Event()
+            current_event.title = event['title']
+            current_event.description = event['description']
 
-        return HttpResponse(json.dumps(eventsArray))
+            image = event['image']
+            if image is not None:
+                current_event.imageUrl = get_image(image)
+
+            current_event.latitude = event['latitude']
+            current_event.longitude = event['longitude']
+            current_event.startDateTime = event['start_time']
+            current_event.eventId = event['id']
+            current_event.eventUrl = event['url']
+            current_event.tags = eventRequest.categories
+            events_array.append(current_event)
+
+        json_resp = json.dumps(events_array, default=lambda o: o.__dict__)
+        return HttpResponse(json_resp)
     return HttpResponse("Get Event request is not supported")
 
 
