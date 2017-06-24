@@ -5,7 +5,7 @@ import json
 
 from nomad.api.event_api import EventfulDataImporter
 from nomad.app_constants import EVENT_CATEGORIES
-from .models import Question, Choice, EventsRequest, Event
+from .models import Question, Choice, EventsRequest, Event, LikeRequest
 
 
 def index(request):
@@ -91,8 +91,24 @@ def get_events(request, arg):
     return HttpResponse("Get Event request is not supported")
 
 
-def like(request, service_id, event_id):
+def likeDeprecated(request, service_id, event_id):
     if (request.method == 'POST'):
         importer = EventfulDataImporter()
         return HttpResponse('serviceId {0} , id {1}'.format(service_id, event_id))
+    return HttpResponse("Get Event request is not supported")
+
+
+def like(request, args) :
+    if (request.method == 'POST'):
+        likeRequestJSON = json.loads(request.body)
+        likeRequest = LikeRequest()
+        likeRequest.username = likeRequestJSON.get("username")
+        likeRequest.event_id = likeRequestJSON.get("event_id")
+        likeRequest.service_id = likeRequestJSON.get("service_id")
+
+        importer = EventfulDataImporter()
+
+        event = importer.get_event_by_id(event_id=likeRequest.event_id)
+
+        return HttpResponse('Post like successful')
     return HttpResponse("Get Event request is not supported")

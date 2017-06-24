@@ -96,3 +96,14 @@ class Event(object):
 
     def __str__(self):
         return self.eventId
+
+
+@python_2_unicode_compatible
+class LikeRequest(object):
+    def __init__(self, service_id=None, event_id=None, username=None) :
+        self.service_id = service_id
+        self.event_id = event_id
+        self.username = username
+
+    def __str__(self):
+        return  'service_id {0} , event_id {1}, username {2}'.format(self.service_id, self.event_id, self.username)
