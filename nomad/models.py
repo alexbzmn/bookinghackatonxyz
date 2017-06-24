@@ -72,9 +72,7 @@ class Event(object):
         current_event.title = event['title']
         current_event.description = event['description']
 
-        image = event['image']
-        if image is not None:
-            current_event.imageUrl = Event.get_image(image)
+        current_event.imageUrl = Event.get_image(event)
 
         current_event.latitude = event['latitude']
         current_event.longitude = event['longitude']
@@ -89,10 +87,19 @@ class Event(object):
         return current_event
 
     @staticmethod
-    def get_image(image):
+    def get_image(event):
+        image_tag = 'image'
+
+        if image_tag not in event:
+            return ''
+
+        image = event[image_tag]
+        if image is None:
+            return ''
+
         if 'medium' in image:
             return image['medium']['url']
-        return ""
+        return ''
 
     def __str__(self):
         return self.eventId
@@ -100,10 +107,10 @@ class Event(object):
 
 @python_2_unicode_compatible
 class LikeRequest(object):
-    def __init__(self, service_id=None, event_id=None, username=None) :
+    def __init__(self, service_id=None, event_id=None, username=None):
         self.service_id = service_id
         self.event_id = event_id
         self.username = username
 
     def __str__(self):
-        return  'service_id {0} , event_id {1}, username {2}'.format(self.service_id, self.event_id, self.username)
+        return 'service_id {0} , event_id {1}, username {2}'.format(self.service_id, self.event_id, self.username)
