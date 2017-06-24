@@ -75,7 +75,7 @@ class Journey(models.Model):
 
 @python_2_unicode_compatible
 class LikedEvent(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True)
+    id = models.CharField(primary_key=True, max_length=200)
     event_id = models.CharField(max_length=100)
     service_id = models.CharField(max_length=100)
     username = models.CharField(max_length=100)

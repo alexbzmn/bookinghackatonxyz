@@ -5,6 +5,7 @@ import json
 
 from nomad.api.event_api import EventfulDataImporter
 from nomad.app_constants import EVENT_CATEGORIES
+from nomad.models import LikedEvent
 from .models import Question, Choice, EventRequest, Event, LikeRequest
 
 
@@ -110,6 +111,21 @@ def like(request, args):
         importer = EventfulDataImporter()
 
         event = importer.get_event_by_id(event_id=likeRequest.event_id)
+
+        liked_event = LikedEvent()
+        liked_event.id = likeRequest.event_id + likeRequest.username
+        liked_event.event_id = likeRequest.event_id
+        liked_event.username = likeRequest.username
+        liked_event.service_id = likeRequest.service_id
+        liked_event.latitude = event.latitude
+        liked_event.longitude = event.longitude
+        liked_event.title = event.title
+        liked_event.description = event.description
+        liked_event.start_time = event.startDateTime
+        liked_event.event_url = event.eventUrl
+        liked_event.image_url = event.imageUrl
+
+        liked_event.save()
 
         return HttpResponse('Post like successful')
     return HttpResponse("Get Event request is not supported")
