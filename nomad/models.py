@@ -54,7 +54,7 @@ class EventsResponse(object):
 @python_2_unicode_compatible
 class Event(object):
     def __init__(self, eventId=None, title=None, tags=None, startDateTime=None, description=None, longitude=None,
-                 latitude=None, imageUrl=None, eventUrl=None):
+                 latitude=None, imageUrl=None, eventUrl=None, service_id=None):
         self.eventId = eventId
         self.title = title
         self.tags = tags
@@ -64,6 +64,7 @@ class Event(object):
         self.latitude = latitude
         self.imageUrl = imageUrl
         self.eventUrl = eventUrl
+        self.service_id = service_id
 
     def __str__(self):
         return self.eventId

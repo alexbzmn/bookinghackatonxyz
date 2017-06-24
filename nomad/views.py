@@ -73,7 +73,12 @@ def get_events(request, arg):
         categories = ",".join(categoryNames)
 
         importer = EventfulDataImporter()
-        events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
+        if eventRequest.fromDate is not None and eventRequest.toDate is not None :
+            date_interval='{0}00-{1}00'.format(eventRequest.fromDate, eventRequest.toDate)
+            events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
+                                            categories=categories, date_interval=date_interval)
+        else:
+            events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
                                         categories=categories)
 
         events_array = []
@@ -90,6 +95,7 @@ def get_events(request, arg):
             current_event.longitude = event['longitude']
             current_event.startDateTime = event['start_time']
             current_event.eventId = event['id']
+            current_event.service_id = 'eventful'
             current_event.eventUrl = event['url']
             current_event.tags = eventRequest.categories
             events_array.append(current_event)
@@ -103,3 +109,9 @@ def get_image(image):
     if 'medium' in image:
         return image['medium']['url']
     return ""
+
+def like(request, service_id, event_id) :
+    if (request.method == 'POST'):
+        importer = EventfulDataImporter()
+        return HttpResponse('serviceId {0} , id {1}'.format(service_id, event_id))
+    return HttpResponse("Get Event request is not supported")

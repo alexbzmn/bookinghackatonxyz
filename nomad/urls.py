@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^(create-question/$)', views.create_question_view, name='createq'),
     url(r'^(create-question/create$)', views.create_question_create, name='createqaction'),
-    url(r'^(api/events$)', views.get_events, name='getevents')
+    url(r'^(api/events$)', views.get_events, name='getevents'),
+    url(r'^(api/events/(?P<service_id>[0-9a-zA-Z_]+)/(?P<event_id>[0-9a-zA-Z_]+)$)', views.like, name='like')
 ]
