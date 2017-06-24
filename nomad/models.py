@@ -73,11 +73,8 @@ class Journey(models.Model):
         return "id = {0}, username = {1}".format(self.id, self.username)
 
 
-
-
 @python_2_unicode_compatible
 class LikedEvent(models.Model):
-
     id = models.IntegerField(primary_key=True, auto_created=True)
     event_id = models.CharField(max_length=100)
     service_id = models.CharField(max_length=100)

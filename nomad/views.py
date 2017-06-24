@@ -93,14 +93,14 @@ def get_events(request, arg):
 
 
 def likeDeprecated(request, service_id, event_id):
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         importer = EventfulDataImporter()
         return HttpResponse('serviceId {0} , id {1}'.format(service_id, event_id))
     return HttpResponse("Get Event request is not supported")
 
 
-def like(request, args) :
-    if (request.method == 'POST'):
+def like(request, args):
+    if request.method == 'POST':
         likeRequestJSON = json.loads(request.body)
         likeRequest = LikeRequest()
         likeRequest.username = likeRequestJSON.get("username")
