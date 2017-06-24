@@ -39,3 +39,26 @@ class EventsRequest(object):
         self.toDate = toDate
     def __str__(self):
         return self.longitude + ' ' + self.latitude
+
+@python_2_unicode_compatible
+class EventsResponse(object):
+    def __init__(self, events = None):
+        self.events = events
+    def __str__(self):
+        return self.events
+
+
+@python_2_unicode_compatible
+class Event(object):
+    def __init__(self, eventId =None, title = None, tags = None, startDateTime = None, description = None, longitude = None, latitude = None, imageUrl = None, eventUrl = None):
+        self.eventId = eventId
+        self.title = title
+        self.tags = tags
+        self.startDateTime = startDateTime
+        self.description = description
+        self.longitude = longitude
+        self.latitude = latitude
+        self.imageUrl = imageUrl
+        self.eventUrl = eventUrl
+    def __str__(self):
+        return self.eventId

@@ -3,7 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 import json
 
-from .models import Question, Choice, EventsRequest
+from nomad.api.event_api import EventfulDataImporter
+from nomad.app_constants import EVENT_CATEGORIES
+from .models import Question, Choice, EventsRequest, Event
 
 
 def index(request):
@@ -36,6 +38,7 @@ def create_question_create(request, arg):
 
     return HttpResponse("Question is created")
 
+
 def create_question_create(request, arg):
     questionJSON = json.loads(request.body)
 
@@ -47,18 +50,53 @@ def create_question_create(request, arg):
 
     return HttpResponse("Question is created")
 
+
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'nomad/detail.html', {'question': question})
 
+
 def get_events(request, arg):
-    if (request.method == 'POST') :
+    if (request.method == 'POST'):
         eventsRequestJSON = json.loads(request.body)
         eventRequest = EventsRequest()
         eventRequest.latitude = str(eventsRequestJSON.get("latitude"))
         eventRequest.longitude = str(eventsRequestJSON.get("longitude"))
         eventRequest.fromDate = str(eventsRequestJSON.get("fromDate"))
         eventRequest.toDate = str(eventsRequestJSON.get("toDate"))
-        eventRequest.categories = eventsRequestJSON.get("categories");
-        return HttpResponse("Event request is processed")
+        eventRequest.categories = eventsRequestJSON.get("categories")
+        categoryNames = []
+
+        for category in eventRequest.categories:
+            categoryNames.append(EVENT_CATEGORIES[category])
+
+        categories = ",".join(categoryNames)
+
+        importer = EventfulDataImporter()
+        events = importer.import_events(lat=float(eventRequest.latitude), long=float(eventRequest.longitude),
+                                        categories=categories)
+
+        eventsArray = []
+        for event in events:
+            currentEvent = Event()
+            currentEvent.title = event['title']
+            currentEvent.description = event['description']
+            image = event['image']
+            if (image is not None) :
+                currentEvent.imageUrl = get_image(image)
+            currentEvent.latitude = event['latitude']
+            currentEvent.longitude = event['longitude']
+            currentEvent.startDateTime = event['start_time']
+            currentEvent.eventId = event['id']
+            currentEvent.eventUrl = event['url']
+            currentEvent.tags = eventRequest.categories
+            eventsArray.append(currentEvent)
+
+        return HttpResponse(json.dumps(eventsArray))
     return HttpResponse("Get Event request is not supported")
+
+
+def get_image(image):
+    if 'medium' in image:
+        return image['medium']['url']
+    return ""
