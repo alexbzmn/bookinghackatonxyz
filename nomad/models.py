@@ -30,8 +30,26 @@ class Choice(models.Model):
 
 
 @python_2_unicode_compatible
-class EventsRequest(object):
-    def __init__(self, longitude=None, latitude=None, categories=None, fromDate=None, toDate=None):
+class User(models.Model):
+    username = models.CharField(primary_key=True, max_length=200)
+
+    def __str__(self):
+        return self.username
+
+
+@python_2_unicode_compatible
+class Category(models.Model):
+    id = models.IntegerField(primary_key=True)
+    username = models.ForeignKey(User)
+
+    def __str__(self):
+        return "id = {0}, username = {1}".format(self.id, self.username)
+
+
+@python_2_unicode_compatible
+class EventRequest(object):
+    def __init__(self, longitude=None, latitude=None, categories=None, fromDate=None, toDate=None, username=None):
+        self.username = username
         self.longitude = longitude
         self.latitude = latitude
         self.categories = categories
@@ -40,6 +58,40 @@ class EventsRequest(object):
 
     def __str__(self):
         return self.longitude + ' ' + self.latitude
+
+
+@python_2_unicode_compatible
+class Journey(models.Model):
+    id = models.IntegerField(primary_key=True)
+    username = models.ForeignKey(User)
+    fromDate = models.CharField(max_length=100)
+    toDate = models.CharField(max_length=100)
+    longitude = models.CharField(max_length=100)
+    latitude = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "id = {0}, username = {1}".format(self.id, self.username)
+
+
+
+
+@python_2_unicode_compatible
+class LikedEvent(models.Model):
+
+    id = models.IntegerField(primary_key=True, auto_created=True)
+    event_id = models.CharField(max_length=100)
+    service_id = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
+    longitude = models.CharField(max_length=100)
+    latitude = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    start_time = models.CharField(max_length=100)
+    event_url = models.CharField(max_length=1000)
+    image_url = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return "id = {0}, username = {1}".format(self.event_id, self.username)
 
 
 @python_2_unicode_compatible

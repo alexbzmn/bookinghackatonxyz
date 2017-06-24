@@ -5,7 +5,7 @@ import json
 
 from nomad.api.event_api import EventfulDataImporter
 from nomad.app_constants import EVENT_CATEGORIES
-from .models import Question, Choice, EventsRequest, Event, LikeRequest
+from .models import Question, Choice, EventRequest, Event, LikeRequest
 
 
 def index(request):
@@ -59,12 +59,13 @@ def detail(request, question_id):
 def get_events(request, arg):
     if (request.method == 'POST'):
         eventsRequestJSON = json.loads(request.body)
-        eventRequest = EventsRequest()
+        eventRequest = EventRequest()
         eventRequest.latitude = str(eventsRequestJSON.get("latitude"))
         eventRequest.longitude = str(eventsRequestJSON.get("longitude"))
         eventRequest.fromDate = str(eventsRequestJSON.get("fromDate"))
         eventRequest.toDate = str(eventsRequestJSON.get("toDate"))
         eventRequest.categories = eventsRequestJSON.get("categories")
+        eventRequest.username = eventsRequestJSON.get("username")
         categoryNames = []
 
         for category in eventRequest.categories:
