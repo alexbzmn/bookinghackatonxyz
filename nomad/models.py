@@ -26,3 +26,16 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+@python_2_unicode_compatible
+class EventsRequest(object):
+
+    def __init__(self, longitude = None, latitude = None, categories = None, fromDate = None, toDate = None):
+        self.longitude = longitude
+        self.latitude = latitude
+        self.categories = categories
+        self.fromDate = fromDate
+        self.toDate = toDate
+    def __str__(self):
+        return self.longitude + ' ' + self.latitude

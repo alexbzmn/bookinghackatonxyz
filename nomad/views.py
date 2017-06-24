@@ -1,10 +1,9 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-
 import json
 
-from .models import Question, Choice
+from .models import Question, Choice, EventsRequest
 
 
 def index(request):
@@ -37,7 +36,29 @@ def create_question_create(request, arg):
 
     return HttpResponse("Question is created")
 
+def create_question_create(request, arg):
+    questionJSON = json.loads(request.body)
+
+    question = Question()
+    question.question_text = str(questionJSON.get("Text"))
+    question.pub_date = timezone.now()
+
+    question.save()
+
+    return HttpResponse("Question is created")
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'nomad/detail.html', {'question': question})
+
+def get_events(request, arg):
+    if (request.method == 'POST') :
+        eventsRequestJSON = json.loads(request.body)
+        eventRequest = EventsRequest()
+        eventRequest.latitude = str(eventsRequestJSON.get("latitude"))
+        eventRequest.longitude = str(eventsRequestJSON.get("longitude"))
+        eventRequest.fromDate = str(eventsRequestJSON.get("fromDate"))
+        eventRequest.toDate = str(eventsRequestJSON.get("toDate"))
+        eventRequest.categories = eventsRequestJSON.get("categories");
+        return HttpResponse("Event request is processed")
+    return HttpResponse("Get Event request is not supported")
