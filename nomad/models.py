@@ -74,7 +74,7 @@ class Event(object):
 
         image = event['image']
         if image is not None:
-            current_event.imageUrl = get_image(image)
+            current_event.imageUrl = Event.get_image(image)
 
         current_event.latitude = event['latitude']
         current_event.longitude = event['longitude']
