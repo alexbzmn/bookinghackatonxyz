@@ -33,9 +33,10 @@ class EventfulDataImporter:
         except:
             print 'Eventful request error'
 
-        return data_list
+        return data_list[0]['events']['event']
+
 
 # Example
-# importer = EventfulDataImporter()
-# events = importer.import_events(lat=32.746682, long=-117.162741, categories='music, food')
-# print events
+importer = EventfulDataImporter()
+events = importer.import_events(lat=32.746682, long=-117.162741, categories='music, food')
+print events
