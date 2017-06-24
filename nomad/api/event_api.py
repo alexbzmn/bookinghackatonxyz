@@ -51,9 +51,8 @@ class EventfulDataImporter:
 
         return Event.from_json(event)
 
-
 # Example
-importer = EventfulDataImporter()
-events = importer.get_event_by_id(event_id="E0-001-095008330-1")
+# importer = EventfulDataImporter()
+# events = importer.get_event_by_id(event_id="E0-001-095008330-1")
 
-print events
+# print events
