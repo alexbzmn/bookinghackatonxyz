@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^(create-question/create$)', views.create_question_create, name='createqaction'),
     url(r'^(api/events$)', views.get_events, name='getevents'),
     url(r'^(api/events/(?P<service_id>[0-9a-zA-Z_]+)/(?P<event_id>[0-9a-zA-Z_]+)$)', views.likeDeprecated, name='likeDeprecated'),
-    url(r'^(api/likes$)', views.like, name='like')
+    url(r'^(api/likes$)', views.like, name='like'),
+    url(r'^(api/likes/(?P<username>[0-9a-zA-Z_]+)$)', views.user_likes, name='userLikes'),
+    url(r'^(api/recommendCompanions/(?P<username>[0-9a-zA-Z_]+)$)', views.recommendCompanions, name='recommendCompanions')
 ]

@@ -4,10 +4,11 @@ import threading
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.db.models import F
 
 from nomad.api.event_api import EventfulDataImporter
 from nomad.app_constants import EVENT_CATEGORIES
-from nomad.models import LikedEvent, User, Journey, Category
+from nomad.models import LikedEvent, User, Journey, Category, UserRank
 from .models import Question, EventRequest, Event, LikeRequest
 
 
@@ -170,4 +171,43 @@ def like(request, args):
         liked_event.save()
 
         return HttpResponse('Post like successful')
+    if request.method == 'DELETE':
+        likeRequestJSON = json.loads(request.body)
+        likeRequest = LikeRequest()
+        likeRequest.username = likeRequestJSON.get("username")
+        likeRequest.event_id = likeRequestJSON.get("event_id")
+        likeRequest.service_id = likeRequestJSON.get("service_id")
+
+        liked_event = LikedEvent()
+        liked_event.id = likeRequest.event_id + likeRequest.username
+        liked_event.delete()
+        return HttpResponse('Dislike successful')
     return HttpResponse("Get Event request is not supported")
+
+def user_likes(request, username):
+
+    likes = LikedEvent.objects.filter(username__exact=F('username'))
+    json_resp = json.dumps(list(like for like in likes), default=lambda o: o.__dict__)
+
+    return HttpResponse(json_resp)
+
+def recommendCompanions(request, username):
+    if request.method == 'GET':
+
+        # supply username to the method and
+
+        userRanksArray = []
+        userRank1 = UserRank()
+        userRank1.username = "user1"
+        userRank1.rank = 1.1
+
+        userRank2 = UserRank()
+        userRank2.username = "user2"
+        userRank2.rank = 1.0
+
+        userRanksArray.append(userRank1)
+        userRanksArray.append(userRank2)
+        sortedArray = sorted(userRanksArray, key=lambda userRank: -userRank.rank)
+        json_resp = json.dumps(sortedArray, default=lambda o: o.__dict__)
+        return HttpResponse(json_resp)
+    return HttpResponse("Only Get Companions is supported")
