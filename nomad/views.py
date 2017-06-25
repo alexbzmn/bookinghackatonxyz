@@ -1,5 +1,7 @@
 import json
-import threading
+
+import json
+import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -192,6 +194,12 @@ def user_likes(request, username):
     return HttpResponse(json_resp)
 
 
+def datetime_handler(x):
+    if isinstance(x, datetime.datetime):
+        return x.isoformat()
+    raise TypeError("Unknown type")
+
+
 def recommendCompanions(request, username):
     if request.method == 'GET':
 
@@ -206,10 +214,11 @@ def recommendCompanions(request, username):
             user_rank = UserRank()
             user_rank.username = rec_pair[0]
             user_rank.rank = rec_pair[1]
+            user_rank.common_days = json.dumps([datetime_handler(ob) for ob in rec_pair[2]])
 
             user_ranks_array.append(user_rank)
 
-        sorted_array = sorted(user_ranks_array, key=lambda user_rank: user_rank.rank, reverse=True)
+        sorted_array = sorted(user_ranks_array, key=lambda x: x.rank, reverse=True)
         json_resp = json.dumps(sorted_array, default=lambda o: o.__dict__)
         return HttpResponse(json_resp)
     return HttpResponse("Only Get Companions is supported")

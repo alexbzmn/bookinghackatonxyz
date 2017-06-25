@@ -1,9 +1,9 @@
+# print _compare_distance(52.2296756, 21.0122287, 52.406374, 16.9251681)
 from datetime import datetime as dt
 from datetime import timedelta
 
 import pandas as pd
 
-# print _compare_distance(52.2296756, 21.0122287, 52.406374, 16.9251681)
 from nomad.models import Journey, Category, User
 
 
@@ -120,7 +120,7 @@ def calculate_scores(search_user):
             if m_cats[m_cats == cat].any():
                 match_cat_count += 1
 
-        scores.append([match_user, len(overlapped_days_unique) * match_cat_count])
+        scores.append([match_user, len(overlapped_days_unique) * match_cat_count, overlapped_days_unique])
 
     return scores
 

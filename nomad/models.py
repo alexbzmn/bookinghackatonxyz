@@ -165,12 +165,13 @@ class LikeRequest(object):
     def __str__(self):
         return 'service_id {0} , event_id {1}, username {2}'.format(self.service_id, self.event_id, self.username)
 
+
 @python_2_unicode_compatible
 class UserRank(object):
-
-    def __init__(self, username=None, rank=None):
+    def __init__(self, username=None, rank=None, common_days=None):
         self.username = username
         self.rank = rank
+        self.common_days = common_days
 
     def __str__(self):
         return 'username {0} , rank {1}'.format(self.username, self.rank)
