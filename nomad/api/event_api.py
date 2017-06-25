@@ -35,7 +35,9 @@ class EventfulDataImporter:
         except:
             print 'Eventful request error'
 
-        return data_list[0]['events']['event']
+        if len(data_list) > 0:
+            return data_list[0]['events']['event']
+        return []
 
     def get_event_by_id(self, event_id):
         eventful_api = eventful.API(self.api_key)
