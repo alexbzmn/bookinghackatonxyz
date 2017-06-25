@@ -82,11 +82,11 @@ class LikedEvent(models.Model):
     username = models.CharField(max_length=100)
     longitude = models.CharField(max_length=100)
     latitude = models.CharField(max_length=100)
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    start_time = models.CharField(max_length=100)
-    event_url = models.CharField(max_length=1000)
-    image_url = models.CharField(max_length=1000)
+    title = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=100, null=True)
+    start_time = models.CharField(max_length=100, null=True)
+    event_url = models.CharField(max_length=1000, null=True)
+    image_url = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return "id = {0}, username = {1}".format(self.event_id, self.username)
