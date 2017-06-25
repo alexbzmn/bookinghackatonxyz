@@ -84,7 +84,7 @@ class LikedEvent(models.Model):
     latitude = models.CharField(max_length=100)
     title = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=100, null=True)
-    start_time = models.CharField(max_length=100, null=True)
+    startDateTime = models.CharField(max_length=100, null=True)
     event_url = models.CharField(max_length=1000, null=True)
     image_url = models.CharField(max_length=1000, null=True)
 

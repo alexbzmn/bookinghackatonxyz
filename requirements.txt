@@ -1,7 +1,9 @@
 pandas
-dj-database-url==0.4.1
-Django==1.9.7
-gunicorn==19.6.0
-psycopg2==2.6.2
-whitenoise==2.0.6
-django-cors-headers==2.1.0
+dj-database-url
+Django
+gunicorn
+psycopg2
+whitenoise
+django-cors-headers
+httplib2
+simplejson

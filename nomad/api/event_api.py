@@ -35,7 +35,7 @@ class EventfulDataImporter:
         except:
             print 'Eventful request error'
 
-        if len(data_list) > 0:
+        if len(data_list) > 0 and data_list[0]['events'] is not None:
             return data_list[0]['events']['event']
         return []
 

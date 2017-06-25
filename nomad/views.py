@@ -166,7 +166,7 @@ def like(request, args):
         liked_event.longitude = event.longitude
         liked_event.title = event.title
         liked_event.description = event.description
-        liked_event.start_time = event.startDateTime
+        liked_event.startDateTime = event.startDateTime
         liked_event.event_url = event.eventUrl
         liked_event.image_url = event.imageUrl
 
