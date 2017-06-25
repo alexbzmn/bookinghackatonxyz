@@ -184,29 +184,31 @@ def like(request, args):
         return HttpResponse('Dislike successful')
     return HttpResponse("Get Event request is not supported")
 
-def user_likes(request, username):
 
+def user_likes(request, username):
     likes = LikedEvent.objects.filter(username__exact=F('username'))
     json_resp = json.dumps(list(like for like in likes), default=lambda o: o.__dict__)
 
     return HttpResponse(json_resp)
 
+
 def recommendCompanions(request, username):
     if request.method == 'GET':
 
+        import nomad_recommendation as rec
+
+        recs = rec.calculate_scores(username)
         # supply username to the method and
 
         user_ranks_array = []
-        user_rank1 = UserRank()
-        user_rank1.username = "user1"
-        user_rank1.rank = 1.1
 
-        user_rank2 = UserRank()
-        user_rank2.username = "user2"
-        user_rank2.rank = 1.0
+        for rec_pair in recs:
+            user_rank = UserRank()
+            user_rank.username = rec_pair[0]
+            user_rank.rank = rec_pair[1]
 
-        user_ranks_array.append(user_rank1)
-        user_ranks_array.append(user_rank2)
+            user_ranks_array.append(user_rank)
+
         sorted_array = sorted(user_ranks_array, key=lambda user_rank: user_rank.rank, reverse=True)
         json_resp = json.dumps(sorted_array, default=lambda o: o.__dict__)
         return HttpResponse(json_resp)
