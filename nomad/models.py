@@ -173,4 +173,4 @@ class UserRank(object):
         self.rank = rank
 
     def __str__(self):
-        return 'username {0} , username {1}'.format(self.username, self.rank)
+        return 'username {0} , rank {1}'.format(self.username, self.rank)

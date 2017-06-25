@@ -196,18 +196,18 @@ def recommendCompanions(request, username):
 
         # supply username to the method and
 
-        userRanksArray = []
-        userRank1 = UserRank()
-        userRank1.username = "user1"
-        userRank1.rank = 1.1
+        user_ranks_array = []
+        user_rank1 = UserRank()
+        user_rank1.username = "user1"
+        user_rank1.rank = 1.1
 
-        userRank2 = UserRank()
-        userRank2.username = "user2"
-        userRank2.rank = 1.0
+        user_rank2 = UserRank()
+        user_rank2.username = "user2"
+        user_rank2.rank = 1.0
 
-        userRanksArray.append(userRank1)
-        userRanksArray.append(userRank2)
-        sortedArray = sorted(userRanksArray, key=lambda userRank: -userRank.rank)
-        json_resp = json.dumps(sortedArray, default=lambda o: o.__dict__)
+        user_ranks_array.append(user_rank1)
+        user_ranks_array.append(user_rank2)
+        sorted_array = sorted(user_ranks_array, key=lambda user_rank: user_rank.rank, reverse=True)
+        json_resp = json.dumps(sorted_array, default=lambda o: o.__dict__)
         return HttpResponse(json_resp)
     return HttpResponse("Only Get Companions is supported")
